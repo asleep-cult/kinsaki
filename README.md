@@ -35,14 +35,23 @@ when:
     ;
 ;
 
+procedure product(a: Integer, b: Integer) -> (result: Integer):
+    a * b -> result
+;  -- accepts 2 Integers and stores their product in result
+
 type Span (Integer, Integer)  -- type with anonymous fields
 
 type Span (  -- type with named fields
     start: Integer,
     stop: Integer,
 )
+
+type Username (value: String):  -- type with implementation
+    procedure is_valid(self: Username) -> (valid: Boolean):
+        self.value.length < 20 -> valid
+    ; 
+;
 ```
 
 TODO: Loops?<br>
 TODO: Effect handlers?<br>
-TODO: Procedures?<br>
