@@ -1,7 +1,7 @@
 ## kinsaki
 An experimental/concept programming language.
 
-```
+```hs
 y: Integer  -- declare y as an integer
 x -> y      -- x into y i.e. set y to x
 
@@ -45,7 +45,7 @@ type User (  -- type with named fields and implementation
     id: Integer,
     messages: Integer,
 ):
-    procedure qualified_for_discount(self) -> (qualified: bool):
+    procedure qualified_for_discount(self) -> (qualified: Boolean):
         self.messages > 50 -> qualified
     ;
 ;
