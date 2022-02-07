@@ -4,6 +4,7 @@ An experimental/concept programming language.
 ```
 x -> y  -- x into y i.e. set y to x
 
+~x      -- negate y
 y = x   -- y is equivalent to x
 y > x   -- y is greater than x
 y >= x  -- y is greater than or equal to x
@@ -35,7 +36,6 @@ when:
 ```
 
 TODO: Static typing?<br>
-TODO: Negation?<br>
 TODO: Loops?<br>
 TODO: Effect handlers?<br>
 TODO: Procedures?<br>
