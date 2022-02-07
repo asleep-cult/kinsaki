@@ -1,6 +1,6 @@
 ## kinsaki
 An experimental/concept programming language.
-
+<br>
 ```
 x -> y  -- x into y i.e. set y to x
 
@@ -34,9 +34,9 @@ when:
 ;
 ```
 
-TODO: Static typing?
-TODO: Negation?
-TODO: Loops?
-TODO: Effect handlers?
-TODO: Procedures?
+TODO: Static typing?<br>
+TODO: Negation?<br>
+TODO: Loops?<br>
+TODO: Effect handlers?<br>
+TODO: Procedures?<br>
 TODO: Declarations?
