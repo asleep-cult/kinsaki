@@ -37,7 +37,7 @@ when:
 
 procedure product(a: Integer, b: Integer) -> (c: Integer):
     a * b -> c
-;  -- accepts 2 Integers and stores their product in result
+;  -- accepts 2 Integers and stores their product in c
 
 type Span (Integer, Integer)  -- type with anonymous fields
 
