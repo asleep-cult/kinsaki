@@ -1,8 +1,9 @@
 ## kinsaki
 An experimental/concept programming language.
-<br>
+
 ```
-x -> y  -- x into y i.e. set y to x
+y: Integer  -- declare y as an integer
+x -> y      -- x into y i.e. set y to x
 
 ~x      -- negate y
 y = x   -- y is equivalent to x
@@ -35,8 +36,6 @@ when:
 ;
 ```
 
-TODO: Static typing?<br>
 TODO: Loops?<br>
 TODO: Effect handlers?<br>
 TODO: Procedures?<br>
-TODO: Declarations?
