@@ -35,8 +35,8 @@ when:
     ;
 ;
 
-procedure product(a: Integer, b: Integer) -> (result: Integer):
-    a * b -> result
+procedure product(a: Integer, b: Integer) -> (c: Integer):
+    a * b -> c
 ;  -- accepts 2 Integers and stores their product in result
 
 type Span (Integer, Integer)  -- type with anonymous fields
@@ -45,8 +45,8 @@ type User (  -- type with named fields and implementation
     id: Integer,
     messages: Integer,
 ):
-    procedure qualified_for_discount(self) -> (qualified: Boolean):
-        self.messages > 50 -> qualified
+    procedure qualified_for_discount(self) -> (qual: Boolean):
+        self.messages > 50 -> qual
     ;
 ;
 ```
