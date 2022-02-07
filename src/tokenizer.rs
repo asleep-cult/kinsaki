@@ -25,17 +25,24 @@ pub enum Token<'a> {
     LessThanOrGreaterThan,
     RightArrow,
 
-    Comment(&'a str),
-    Identifier(&'a str),
-    String(&'a str),
-    Number(&'a str),
+    Type,
+    Procedure,
+    When,
+    Fallthrough,
+
+    Comment { content: &'a str },
+    WhiteSpace { content: &'a str },
+
+    Identifier { content: &'a str },
+    Str { content: &'a str },
+    Number { content: &'a str },
 }
 
 struct Tokenizer<'a> {
     chars: Chars<'a>,
 }
 
-impl <'a> Tokenizer<'a> {
+impl<'a> Tokenizer<'a> {
     pub fn new(source: &str) -> Tokenizer {
         Tokenizer {
             chars: source.chars(),

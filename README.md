@@ -41,15 +41,13 @@ procedure product(a: Integer, b: Integer) -> (result: Integer):
 
 type Span (Integer, Integer)  -- type with anonymous fields
 
-type Span (  -- type with named fields
-    start: Integer,
-    stop: Integer,
-)
-
-type Username (value: String):  -- type with implementation
-    procedure is_valid(self: Username) -> (valid: Boolean):
-        self.value.length < 20 -> valid
-    ; 
+type User (  -- type with named fields and implementation
+    id: Integer,
+    messages: Integer,
+):
+    procedure qualified_for_discount(self) -> (qualified: bool):
+        self.messages > 50 -> qualified
+    ;
 ;
 ```
 
