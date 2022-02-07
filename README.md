@@ -25,12 +25,12 @@ when x / 2 > y:
 ;
 
 when:
-    abc = Enabled:
+    abc = AbcState::Enabled:
         -- Test condition 1
         fallthrough  -- go to the next block
     ;
 
-    abc = Disabled:
+    abc = AbcState::Disabled:
         -- Test condition 2
     ;
 ;
