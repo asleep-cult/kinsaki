@@ -34,6 +34,13 @@ when:
         -- Test condition 2
     ;
 ;
+
+type Span (Integer, Integer)  -- type with anonymous fields
+
+type Span (  -- type with named fields
+    start: Integer,
+    stop: Integer,
+)
 ```
 
 TODO: Loops?<br>
