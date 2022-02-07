@@ -20,17 +20,17 @@ x = (y & z)  -- x is equivalent to y and z
 (y | z)  -- x or y is equivalent to true
 (x & y)  -- x and y are equivalent to true
 
-when <condition>:
+when x / 2 > y:
     -- Test condition
 ;
 
 when:
-    <condition 1>:
+    abc = Enabled:
         -- Test condition 1
         fallthrough  -- go to the next block
     ;
 
-    <condition 2>:
+    abc = Disabled:
         -- Test condition 2
     ;
 ;
