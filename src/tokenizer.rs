@@ -1,6 +1,14 @@
+use std::str::Chars;
+
 const EOF_CHAR: char = '\0';
 
-pub enum Token<'a> {
+pub struct Token {
+    pub kind: TokenKind,
+    pub begin: usize,
+    pub end: usize,
+}
+
+pub enum TokenKind {
     EndOfFile,
     Invalid,
     
@@ -18,34 +26,38 @@ pub enum Token<'a> {
     Ampersand,
     Tilde,
     Equal,
-    GreaterThan,
-    GreaterThanOrEqualTo,
+    EqualGreaterThan,
     LessThan,
     LessThanOrEqualTo,
     LessThanOrGreaterThan,
-    RightArrow,
+    GreaterThan,
+    GreaterThanOrEqualTo,
 
     Type,
     Procedure,
+    In,
+    Out,
     When,
     Fallthrough,
 
-    Comment { content: &'a str },
-    WhiteSpace { content: &'a str },
+    Comment,
+    WhiteSpace,
 
-    Identifier { content: &'a str },
-    Str { content: &'a str },
-    Number { content: &'a str },
+    Ident,
+    Str,
+    Num,
 }
 
 struct Tokenizer<'a> {
     chars: Chars<'a>,
+    source_length: usize,
 }
 
 impl<'a> Tokenizer<'a> {
     pub fn new(source: &str) -> Tokenizer {
         Tokenizer {
             chars: source.chars(),
+            source_length: source.len(),
         }
     }
 
@@ -53,7 +65,7 @@ impl<'a> Tokenizer<'a> {
         self.chars.as_str().is_empty()
     }
 
-    fn peek(&self) -> char {
+    fn peek_char(&self) -> char {
         self.chars.clone().next().unwrap_or(EOF_CHAR)
     }
 
@@ -66,4 +78,68 @@ impl<'a> Tokenizer<'a> {
             self.chars.next();
         }
     }
+
+    fn length_consumed(&self) -> usize {
+        self.source_length - self.chars.as_str().len()
+    }
+
+    fn next_token(&mut self) -> Token {
+        let begin = self.length_consumed();
+
+        let token_kind = match self.consume_char().unwrap() {
+            '(' => TokenKind::OpenParenthesis,
+            ')' => TokenKind::CloseParenthesis,
+            '.' => TokenKind::Dot,
+            ':' => TokenKind::Colon,
+            ';' => TokenKind::SemiColon,
+            ',' => TokenKind::Comma,
+            '+' => TokenKind::Plus,
+            '-' => TokenKind::Minus,
+            '*' => TokenKind::Star,
+            '/' => TokenKind::Slash,
+            '|' => TokenKind::Pipe,
+            '&' => TokenKind::Ampersand,
+            '~' => TokenKind::Tilde,
+
+            '=' => match self.peek_char() {
+                '>' => {
+                    self.consume_char();
+                    TokenKind::EqualGreaterThan
+                }
+                _ => {
+                    self.consume_char()
+                    TokenKind::Equal
+                }
+            },
+
+            '<' => match self.peek_char() {
+                '=' => {
+                    self.consume_char();
+                    TokenKind::LessThanOrEqualTo
+                }
+                '>' => {
+                    self.consume_char()
+                    TokenKind::LessThanOrGreaterThan
+                }
+                _ => {
+                    TokenKind::LessThan
+                }
+            },
+
+            '>' => match self.peek_char() {
+                '=' => {
+                    self.consume_char();
+                    TokenKind::GreaterThanOrEqualTo
+                },
+                _ => {
+                    TokenKind::GreaterThan
+                }
+            },
+
+            _ => TokenKind::Invalid,
+        }
+
+        return Token { kind: token_kind, begin: begin, end: self.length_consumed() }
+    }
 }
+[;],,j8
