@@ -1,7 +1,7 @@
 ## kinsaki
 An experimental/concept programming language.
 
-```
+```hs
 y: Integer  -- declare y as an integer
 x -> y      -- x into y i.e. set y to x
 
@@ -20,24 +20,24 @@ x = (y & z)  -- x is equivalent to y and z
 (y | z)  -- x or y is equivalent to true
 (x & y)  -- x and y are equivalent to true
 
-when <condition>:
+when x / 2 > y:
     -- Test condition
 ;
 
 when:
-    <condition 1>:
+    abc = AbcState::Enabled:
         -- Test condition 1
         fallthrough  -- go to the next block
     ;
 
-    <condition 2>:
+    abc = AbcState::Disabled:
         -- Test condition 2
     ;
 ;
 
-procedure product(a: Integer, b: Integer) -> (result: Integer):
-    a * b -> result
-;  -- accepts 2 Integers and stores their product in result
+procedure product (Integer, Integer) => (Integer):
+    in.0 * in.1 -> out.0
+;  -- accepts 2 Integers and stores their product in c
 
 type Span (Integer, Integer)  -- type with anonymous fields
 
@@ -45,8 +45,8 @@ type User (  -- type with named fields and implementation
     id: Integer,
     messages: Integer,
 ):
-    procedure qualified_for_discount(self) -> (qualified: bool):
-        self.messages > 50 -> qualified
+    procedure qualified_for_discount (self: User) => (Boolean):
+        self.messages > 50 -> out.0
     ;
 ;
 ```
