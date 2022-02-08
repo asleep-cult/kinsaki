@@ -27,17 +27,15 @@ when x / 2 > y:
 when:
     abc = AbcState::Enabled:
         -- Test condition 1
-        fallthrough  -- go to the next block
-    ;
+        fallthrough;  -- go to the next block
 
     abc = AbcState::Disabled:
         -- Test condition 2
-    ;
+        ();
 ;
 
 procedure product (Integer, Integer) => (Integer):
-    in.0 * in.1 -> out.0
-;  -- gives the product of 2 Integers
+    in.0 * in.1 -> out.0;  -- gives the product of 2 Integers
 
 type Span (Integer, Integer)  -- type with anonymous fields
 
@@ -46,8 +44,7 @@ type User (  -- type with named fields and implementation
     messages: Integer,
 ):
     procedure qualified_for_discount (self: User) => (Boolean):
-        self.messages > 50 -> out.0
-    ;
+        self.messages > 50 -> out.0;
 ;
 ```
 
