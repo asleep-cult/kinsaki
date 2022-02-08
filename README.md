@@ -35,7 +35,7 @@ when:
     ;
 ;
 
-procedure product(Integer, Integer) -> (Integer):
+procedure product (Integer, Integer) => (Integer):
     in.0 * in.1 -> out.0
 ;  -- accepts 2 Integers and stores their product in c
 
@@ -45,7 +45,7 @@ type User (  -- type with named fields and implementation
     id: Integer,
     messages: Integer,
 ):
-    procedure qualified_for_discount(self) -> (Boolean):
+    procedure qualified_for_discount (self) => (Boolean):
         self.messages > 50 -> out.0
     ;
 ;
