@@ -45,7 +45,7 @@ type User (  -- type with named fields and implementation
     id: Integer,
     messages: Integer,
 ):
-    procedure qualified_for_discount (self) => (Boolean):
+    procedure qualified_for_discount (self: User) => (Boolean):
         self.messages > 50 -> out.0
     ;
 ;
