@@ -142,4 +142,3 @@ impl<'a> Tokenizer<'a> {
         return Token { kind: token_kind, begin: begin, end: self.length_consumed() }
     }
 }
-[;],,j8
