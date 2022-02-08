@@ -37,7 +37,7 @@ when:
 
 procedure product (Integer, Integer) => (Integer):
     in.0 * in.1 -> out.0
-;  -- accepts 2 Integers and stores their product in c
+;  -- gives the product of 2 Integers
 
 type Span (Integer, Integer)  -- type with anonymous fields
 
