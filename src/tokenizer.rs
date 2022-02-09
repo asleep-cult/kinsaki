@@ -26,7 +26,7 @@ pub enum TokenKind {
     Ampersand,
     Tilde,
     Equal,
-    EqualGreaterThan,
+    RightArrow,
     LessThan,
     LessThanOrEqualTo,
     LessThanOrGreaterThan,
@@ -109,12 +109,19 @@ impl<'a> Tokenizer<'a> {
             ';' => TokenKind::SemiColon,
             ',' => TokenKind::Comma,
             '+' => TokenKind::Plus,
-            '-' => TokenKind::Minus,
             '*' => TokenKind::Star,
             '/' => TokenKind::Slash,
             '|' => TokenKind::Pipe,
             '&' => TokenKind::Ampersand,
             '~' => TokenKind::Tilde,
+
+            '-' => match self.peek_char() {
+                '>' => {
+                    self.consume_char()
+                    TokenKind::RightArrow
+                }
+                _ => TokenKind::Minus,
+            },
 
             '=' => match self.peek_char() {
                 '>' => {
