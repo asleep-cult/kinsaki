@@ -48,6 +48,14 @@ pub enum TokenKind {
     Num,
 }
 
+fn is_ident_start(c: char) -> bool {
+    matches!(c, 'a'..='z' | 'A'..='Z' | '_')
+}
+
+fn is_ident_part(c: char) -> bool {
+    matches!(c, '0'..='9' | 'a'..='z' | 'A'..='Z' | '_')
+}
+
 struct Tokenizer<'a> {
     chars: Chars<'a>,
     source_length: usize,
@@ -83,10 +91,17 @@ impl<'a> Tokenizer<'a> {
         self.source_length - self.chars.as_str().len()
     }
 
+    fn identifier(&mut self) -> TokenKind {
+        self.consume_while(is_ident_part);
+        TokenKind::Ident
+    }
+
     fn next_token(&mut self) -> Token {
         let begin = self.length_consumed();
 
         let token_kind = match self.consume_char().unwrap() {
+            c if is_ident_start(c) => self.identifier(),
+
             '(' => TokenKind::OpenParenthesis,
             ')' => TokenKind::CloseParenthesis,
             '.' => TokenKind::Dot,
