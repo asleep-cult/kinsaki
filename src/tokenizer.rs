@@ -53,7 +53,7 @@ fn is_ident_start(c: char) -> bool {
 }
 
 fn is_ident_part(c: char) -> bool {
-    matches!(c, '0'..='9' | 'a'..='z' | 'A'..='Z' | '_')
+    is_ident_start(c) || matches!(c, '0'..='9')
 }
 
 struct Tokenizer<'a> {
