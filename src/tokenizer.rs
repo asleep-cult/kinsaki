@@ -121,10 +121,7 @@ impl<'a> Tokenizer<'a> {
                     self.consume_char();
                     TokenKind::EqualGreaterThan
                 }
-                _ => {
-                    self.consume_char()
-                    TokenKind::Equal
-                }
+                _ => TokenKind::Equal,
             },
 
             '<' => match self.peek_char() {
@@ -136,9 +133,7 @@ impl<'a> Tokenizer<'a> {
                     self.consume_char()
                     TokenKind::LessThanOrGreaterThan
                 }
-                _ => {
-                    TokenKind::LessThan
-                }
+                _ => TokenKind::LessThan,
             },
 
             '>' => match self.peek_char() {
@@ -146,9 +141,7 @@ impl<'a> Tokenizer<'a> {
                     self.consume_char();
                     TokenKind::GreaterThanOrEqualTo
                 },
-                _ => {
-                    TokenKind::GreaterThan
-                }
+                _ => TokenKind::GreaterThan,
             },
 
             _ => TokenKind::Invalid,
