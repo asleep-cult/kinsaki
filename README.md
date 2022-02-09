@@ -34,18 +34,17 @@ when:
         ();
 ;
 
-procedure product (Integer, Integer) -> (Integer):
-    in.0 * in.1 -> out.0;  -- gives the product of 2 Integers
-
 type Span (Integer, Integer)  -- type with anonymous fields
 
-type User (  -- type with named fields and implementation
+type User (  -- type with named fields
     id: Integer,
     messages: Integer,
 ):
-    procedure qualified_for_discount (self: User) => (Boolean):
-        self.messages > 50 -> out.0;
+    -- implementation
 ;
+
+proc product (Integer, Integer) -> (Integer):
+    in.0 * in.1 -> out.0;  -- gives the product of 2 Integers
 ```
 
 TODO: Loops?<br>
