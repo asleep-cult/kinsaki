@@ -34,7 +34,7 @@ pub enum TokenKind {
     GreaterThanOrEqualTo,
 
     Type,
-    Procedure,
+    Proc,
     In,
     Out,
     When,
@@ -121,14 +121,6 @@ impl<'a> Tokenizer<'a> {
                     TokenKind::RightArrow
                 }
                 _ => TokenKind::Minus,
-            },
-
-            '=' => match self.peek_char() {
-                '>' => {
-                    self.consume_char();
-                    TokenKind::EqualGreaterThan
-                }
-                _ => TokenKind::Equal,
             },
 
             '<' => match self.peek_char() {
