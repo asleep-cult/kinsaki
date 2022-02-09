@@ -82,7 +82,7 @@ impl<'a> Tokenizer<'a> {
     }
 
     fn consume_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
-        while predicate() && !self.is_eof() {
+        while predicate(self.peek_char()) && !self.is_eof() {
             self.chars.next();
         }
     }
@@ -117,7 +117,7 @@ impl<'a> Tokenizer<'a> {
 
             '-' => match self.peek_char() {
                 '>' => {
-                    self.consume_char()
+                    self.consume_char();
                     TokenKind::RightArrow
                 }
                 _ => TokenKind::Minus,
@@ -129,7 +129,7 @@ impl<'a> Tokenizer<'a> {
                     TokenKind::LessThanOrEqualTo
                 }
                 '>' => {
-                    self.consume_char()
+                    self.consume_char();
                     TokenKind::LessThanOrGreaterThan
                 }
                 _ => TokenKind::LessThan,
@@ -144,8 +144,8 @@ impl<'a> Tokenizer<'a> {
             },
 
             _ => TokenKind::Invalid,
-        }
+        };
 
-        return Token { kind: token_kind, begin: begin, end: self.length_consumed() }
+        Token { kind: token_kind, begin: begin, end: self.length_consumed() }
     }
 }
