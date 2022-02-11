@@ -2,12 +2,14 @@ use std::str::Chars;
 
 const EOF_CHAR: char = '\0';
 
+#[derive(Debug)]
 pub struct Token {
     pub kind: TokenKind,
     pub begin: usize,
     pub end: usize,
 }
 
+#[derive(Debug)]
 pub enum TokenKind {
     EndOfFile,
     Invalid,
@@ -33,13 +35,6 @@ pub enum TokenKind {
     GreaterThan,
     GreaterThanOrEqualTo,
 
-    Type,
-    Proc,
-    In,
-    Out,
-    When,
-    Fallthrough,
-
     Comment,
     WhiteSpace,
 
@@ -56,7 +51,19 @@ fn is_ident_part(c: char) -> bool {
     is_ident_start(c) || matches!(c, '0'..='9')
 }
 
-struct Tokenizer<'a> {
+fn is_whitespace(c: char) -> bool {
+    matches!(
+        c,
+        '\r'
+        | '\n'
+        | '\t'
+        | '\u{000B}' // vertical tab
+        | '\u{000C}' // form feed
+        | '\u{0020}' // space
+    )
+}
+
+pub struct Tokenizer<'a> {
     chars: Chars<'a>,
     source_length: usize,
 }
@@ -69,7 +76,7 @@ impl<'a> Tokenizer<'a> {
         }
     }
 
-    fn is_eof(&self) -> bool {
+    pub fn is_eof(&self) -> bool {
         self.chars.as_str().is_empty()
     }
 
@@ -77,7 +84,7 @@ impl<'a> Tokenizer<'a> {
         self.chars.clone().next().unwrap_or(EOF_CHAR)
     }
 
-    fn consume_char(&self) -> Option<char> {
+    fn consume_char(&mut self) -> Option<char> {
         self.chars.next()
     }
 
@@ -91,15 +98,26 @@ impl<'a> Tokenizer<'a> {
         self.source_length - self.chars.as_str().len()
     }
 
+    fn whitespace(&mut self) -> TokenKind {
+        self.consume_while(is_whitespace);
+        TokenKind::WhiteSpace
+    }
+
     fn identifier(&mut self) -> TokenKind {
         self.consume_while(is_ident_part);
         TokenKind::Ident
     }
 
-    fn next_token(&mut self) -> Token {
+    fn comment(&mut self) -> TokenKind {
+        self.consume_while(|c| c != '\n');
+        TokenKind::Comment
+    }
+
+    pub fn next_token(&mut self) -> Token {
         let begin = self.length_consumed();
 
         let token_kind = match self.consume_char().unwrap() {
+            c if is_whitespace(c) => self.whitespace(),
             c if is_ident_start(c) => self.identifier(),
 
             '(' => TokenKind::OpenParenthesis,
@@ -114,8 +132,10 @@ impl<'a> Tokenizer<'a> {
             '|' => TokenKind::Pipe,
             '&' => TokenKind::Ampersand,
             '~' => TokenKind::Tilde,
+            '=' => TokenKind::Equal,
 
             '-' => match self.peek_char() {
+                '-' => self.comment(),
                 '>' => {
                     self.consume_char();
                     TokenKind::RightArrow
