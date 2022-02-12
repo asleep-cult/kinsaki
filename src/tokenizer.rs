@@ -97,10 +97,13 @@ impl<'a> Tokenizer<'a> {
         self.chars.next()
     }
 
-    fn consume_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
+    fn consume_while(&mut self, mut predicate: impl FnMut(char) -> bool) -> bool {
+        let mut consumed = false;
         while predicate(self.peek_char()) && !self.is_eof() {
             self.chars.next();
+            consumed = true;
         }
+        consumed
     }
 
     fn length_consumed(&self) -> usize {
@@ -129,12 +132,15 @@ impl<'a> Tokenizer<'a> {
                     self.consume_char();
                     self.consume_char();
                 }
+
                 '"' => {
                     self.consume_char();
                     return true;
                 }
+
                 '\n' => break,
                 EOF_CHAR if self.is_eof() => break,
+
                 _ => {
                     self.consume_char();
                 }
@@ -173,59 +179,19 @@ impl<'a> Tokenizer<'a> {
     }
 
     fn consume_binary(&mut self) -> bool {
-        let mut empty = true;
-        loop {
-            match self.peek_char() {
-                '0' | '1' => {
-                    self.consume_char();
-                    empty = false;
-                }
-                _ => break,
-            }
-        }
-        empty
+        self.consume_while(|c| matches!(c, '0' | '1'))
     }
 
     fn consume_octal(&mut self) -> bool {
-        let mut empty = true;
-        loop {
-            match self.peek_char() {
-                '0'..='7' => {
-                    self.consume_char();
-                    empty = false;
-                }
-                _ => break,
-            }
-        }
-        empty
+        self.consume_while(|c| matches!(c, '0' | '7'))
     }
 
     fn consume_hexadecimal(&mut self) -> bool {
-        let mut empty = true;
-        loop {
-            match self.peek_char() {
-                '0'..='9' | 'a'..='f' => {
-                    self.consume_char();
-                    empty = false;
-                }
-                _ => break,
-            }
-        }
-        empty
+        self.consume_while(|c| matches!(c, '0'..='9' | 'a'..='f'))
     }
 
     fn consume_decimal(&mut self) -> bool {
-        let mut empty = true;
-        loop {
-            match self.peek_char() {
-                '0'..='9' => {
-                    self.consume_char();
-                    empty = false;
-                }
-                _ => break,
-            }
-        }
-        empty
+        self.consume_while(|c| matches!(c, '0'..='9'))
     }
 
     pub fn next_token(&mut self) -> Token {
