@@ -44,7 +44,11 @@ fn main() {
         ;
         
         proc product (Integer, Integer) -> (Integer):
-            in.0 * in.1 -> out.0;  -- gives the product of 2 Integers"
+            in.0 * in.1 -> out.0;  -- gives the product of 2 Integers
+        
+        0x012345678ABCDEFG
+        0o01234567
+        0b01010101010"
     );
 
     while !toks.is_eof() {

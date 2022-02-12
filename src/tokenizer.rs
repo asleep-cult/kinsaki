@@ -9,7 +9,7 @@ pub struct Token {
     pub end: usize,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum TokenKind {
     EndOfFile,
     Invalid,
@@ -39,8 +39,17 @@ pub enum TokenKind {
     WhiteSpace,
 
     Ident,
-    Str,
-    Num,
+    Str { terminated: bool },
+    Int { radix: Radix, empty: bool },
+    Float { radix: Radix, empty: bool },
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Radix {
+    Binary,
+    Octal,
+    Decimal,
+    Hexadecimal,
 }
 
 fn is_ident_start(c: char) -> bool {
@@ -113,12 +122,121 @@ impl<'a> Tokenizer<'a> {
         TokenKind::Comment
     }
 
+    fn string(&mut self) -> bool {
+        loop {
+            match self.peek_char() {
+                '\\' => {
+                    self.consume_char();
+                    self.consume_char();
+                }
+                '"' => {
+                    self.consume_char();
+                    return true;
+                }
+                '\n' => break,
+                EOF_CHAR if self.is_eof() => break,
+                _ => {
+                    self.consume_char();
+                }
+            }
+        }
+
+        false
+    }
+
+    fn number(&mut self, first: char) -> TokenKind {
+        let (radix, empty) = if first == '0' {
+            match self.peek_char() {
+                'b' => {
+                    self.consume_char();
+                    (Radix::Binary, self.consume_binary())
+                }
+                'o' => {
+                    self.consume_char();
+                    (Radix::Octal, self.consume_octal())
+                }
+                'x' => {
+                    self.consume_char();
+                    (Radix::Hexadecimal, self.consume_hexadecimal())
+                }
+                _ => {
+                    self.consume_decimal();
+                    (Radix::Decimal, false)
+                }
+            }
+        } else {
+            self.consume_decimal();
+            (Radix::Decimal, false)
+        };
+
+        return TokenKind::Int { radix: radix, empty: empty };
+    }
+
+    fn consume_binary(&mut self) -> bool {
+        let mut empty = true;
+        loop {
+            match self.peek_char() {
+                '0' | '1' => {
+                    self.consume_char();
+                    empty = false;
+                }
+                _ => break,
+            }
+        }
+        empty
+    }
+
+    fn consume_octal(&mut self) -> bool {
+        let mut empty = true;
+        loop {
+            match self.peek_char() {
+                '0'..='7' => {
+                    self.consume_char();
+                    empty = false;
+                }
+                _ => break,
+            }
+        }
+        empty
+    }
+
+    fn consume_hexadecimal(&mut self) -> bool {
+        let mut empty = true;
+        loop {
+            match self.peek_char() {
+                '0'..='9' | 'a'..='f' => {
+                    self.consume_char();
+                    empty = false;
+                }
+                _ => break,
+            }
+        }
+        empty
+    }
+
+    fn consume_decimal(&mut self) -> bool {
+        let mut empty = true;
+        loop {
+            match self.peek_char() {
+                '0'..='9' => {
+                    self.consume_char();
+                    empty = false;
+                }
+                _ => break,
+            }
+        }
+        empty
+    }
+
     pub fn next_token(&mut self) -> Token {
         let begin = self.length_consumed();
 
         let token_kind = match self.consume_char().unwrap() {
             c if is_whitespace(c) => self.whitespace(),
             c if is_ident_start(c) => self.identifier(),
+
+            '"' => TokenKind::Str { terminated: self.string() },
+            c @ '0'..='9' => self.number(c),
 
             '(' => TokenKind::OpenParenthesis,
             ')' => TokenKind::CloseParenthesis,
@@ -163,6 +281,7 @@ impl<'a> Tokenizer<'a> {
                 _ => TokenKind::GreaterThan,
             },
 
+            EOF_CHAR if self.is_eof() => TokenKind::EndOfFile,
             _ => TokenKind::Invalid,
         };
 
