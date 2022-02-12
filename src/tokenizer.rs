@@ -132,15 +132,12 @@ impl<'a> Tokenizer<'a> {
                     self.consume_char();
                     self.consume_char();
                 }
-
                 '"' => {
                     self.consume_char();
                     return true;
                 }
-
                 '\n' => break,
                 EOF_CHAR if self.is_eof() => break,
-
                 _ => {
                     self.consume_char();
                 }
